@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<TextView android:id="@+id/textView1" android:text="Jet"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_gravity="center" android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+	</TextView>
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:weightSum="120" android:paddingTop="35dp">
+
+		<TextView android:layout_gravity="center" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:id="@+id/textView2" android:text="Where to, dude?" android:paddingBottom="25px"></TextView>
+		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
+			android:layout_weight="20" android:layout_width="235dp"
+			android:layout_height="wrap_content" android:text="Bronx" 
+			android:id="@+id/button1" android:onClick="ClickBronx"/>
+		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
+			android:layout_weight="20" android:layout_width="235dp"
+			android:layout_height="wrap_content" android:text="Ghetto"
+			android:id="@+id/button2" android:onClick="ClickGhetto" />
+		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
+			android:layout_weight="20" android:layout_width="235dp"
+			android:layout_height="wrap_content" android:text="Central Park"
+			android:id="@+id/button3" android:onClick="ClickCentralPark"/>
+		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
+			android:layout_weight="20" android:layout_width="235dp"
+			android:layout_height="wrap_content" android:text="Manhattan"
+			android:id="@+id/button4" android:onClick="ClickManhattan"/>
+		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
+			android:layout_weight="20" android:layout_width="235dp"
+			android:layout_height="wrap_content" android:text="Coney Island"
+			android:id="@+id/button5" android:onClick="ClickConeyIsland"/>
+		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
+			android:layout_weight="20" android:layout_width="235dp"
+			android:layout_height="wrap_content" android:text="Brooklyn"
+			android:id="@+id/button6" android:onClick="ClickBrooklyn"/>
+	</LinearLayout>
+</LinearLayout>
