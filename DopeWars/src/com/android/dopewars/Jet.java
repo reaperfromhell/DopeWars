@@ -4,67 +4,91 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
+import com.android.games.dopewars.R;
 
-public class Jet extends Activity {
+public class Jet extends Activity implements View.OnClickListener{
+	
+	private Button btBronx, btGhetto, btCentralPark, btManhattan, btConeyIsland, btBrooklyn; 
 
 	/** Called when the activity is first created. */
-
-	/*
-	 * private Button BtBronx; private Button BtGhetto; private Button
-	 * BtCentalPark; private Button BtManhattan; private Button BtConeyIslad;
-	 * private Button BtBrooklyn;
-	 */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.jetlayout);
-
-		/*
-		 * BtBronx = (Button) findViewById(R.id.button1); BtGhetto = (Button)
-		 * findViewById(R.id.button2); BtCentPark = (Button)
-		 * findViewById(R.id.button3); BtManhattan = (Button)
-		 * findViewById(R.id.button4); BtConeyIslad = (Button)
-		 * findViewById(R.id.button5); BtBrooklyn = (Button)
-		 * findViewById(R.id.button6);
-		 */
+				
+		btBronx = (Button)findViewById(R.id.btBronx);
+		btGhetto = (Button)findViewById(R.id.btGhetto);
+		btCentralPark = (Button)findViewById(R.id.btCentralPark);
+		btManhattan = (Button)findViewById(R.id.btManhattan);
+		btConeyIsland = (Button)findViewById(R.id.btConeyIsland);
+		btBrooklyn = (Button)findViewById(R.id.btBrooklyn);
+		
+		btBronx.setOnClickListener(this);
+		btGhetto.setOnClickListener(this);
+		btCentralPark.setOnClickListener(this);
+		btManhattan.setOnClickListener(this);
+		btConeyIsland.setOnClickListener(this);
+		btBrooklyn.setOnClickListener(this);		
 
 	}
 
-	public void ClickBronx(View view) {
-		Intent intent = new Intent();
+	@Override
+	public void onClick(View v) {
 		Bundle bundle = new Bundle();
-		bundle.putInt("zone", 1);
-		intent.putExtras(bundle);
-		setResult(RESULT_OK, intent);
-		finish();
-		return;
-	}
-
-	public void ClickGhetto(View view) {
-		Toast.makeText(this, "Ghetto", Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	public void ClickCentalPark(View view) {
-		Toast.makeText(this, "Central Park", Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	public void ClickManhattan(View view) {
-		Toast.makeText(this, "Manhattan", Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	public void ClickConeyIsland(View view) {
-		Toast.makeText(this, "Coney Island", Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	public void ClickBrooklyn(View view) {
-		Toast.makeText(this, "Brooklyn", Toast.LENGTH_LONG).show();
-		return;
+		Intent myIntent = new Intent();
+		switch(v.getId()){
+		case R.id.btBronx:
+			bundle.putString("zone", "Bronx");
+			bundle.putInt("zoneint", 1);
+			myIntent.putExtras(bundle);
+			setResult(RESULT_OK, myIntent);
+			finish();
+			break;
+			
+		case R.id.btGhetto:
+			bundle.putString("zone", "Ghetto");
+			bundle.putInt("zoneint", 2);
+			myIntent.putExtras(bundle);
+			setResult(RESULT_OK, myIntent);
+			finish();
+			break;
+			
+		case R.id.btCentralPark:
+			bundle.putString("zone", "Central Park");
+			bundle.putInt("zoneint", 3);
+			myIntent.putExtras(bundle);
+			setResult(RESULT_OK, myIntent);
+			finish();
+			break;
+			
+		case R.id.btManhattan:
+			bundle.putString("zone", "Manhattan");
+			bundle.putInt("zoneint", 4);
+			myIntent.putExtras(bundle);
+			setResult(RESULT_OK, myIntent);
+			finish();
+			break;
+			
+		case R.id.btConeyIsland:
+			bundle.putString("zone", "Coney Island");
+			bundle.putInt("zoneint", 5);
+			myIntent.putExtras(bundle);
+			setResult(RESULT_OK, myIntent);
+			finish();
+			break;
+			
+		case R.id.btBrooklyn:
+			bundle.putString("zone", "Brooklyn");
+			bundle.putInt("zoneint", 6);
+			myIntent.putExtras(bundle);
+			setResult(RESULT_OK, myIntent);
+			finish();
+			break;
+		
+		}
+		
 	}
 
 }

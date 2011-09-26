@@ -17,26 +17,26 @@
 		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
 			android:layout_weight="20" android:layout_width="235dp"
 			android:layout_height="wrap_content" android:text="Bronx" 
-			android:id="@+id/button1" android:onClick="ClickBronx"/>
+			android:id="@+id/btBronx" />
 		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
 			android:layout_weight="20" android:layout_width="235dp"
 			android:layout_height="wrap_content" android:text="Ghetto"
-			android:id="@+id/button2" android:onClick="ClickGhetto" />
+			android:id="@+id/btGhetto" android:onClick="ClickGhetto" />
 		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
 			android:layout_weight="20" android:layout_width="235dp"
 			android:layout_height="wrap_content" android:text="Central Park"
-			android:id="@+id/button3" android:onClick="ClickCentralPark"/>
+			android:id="@+id/btCentralPark" android:onClick="ClickCentralPark"/>
 		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
 			android:layout_weight="20" android:layout_width="235dp"
 			android:layout_height="wrap_content" android:text="Manhattan"
-			android:id="@+id/button4" android:onClick="ClickManhattan"/>
+			android:id="@+id/btManhattan" android:onClick="ClickManhattan"/>
 		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
 			android:layout_weight="20" android:layout_width="235dp"
 			android:layout_height="wrap_content" android:text="Coney Island"
-			android:id="@+id/button5" android:onClick="ClickConeyIsland"/>
+			android:id="@+id/btConeyIsland" android:onClick="ClickConeyIsland"/>
 		<Button android:layout_gravity="center" android:layout_marginBottom="5dp"
 			android:layout_weight="20" android:layout_width="235dp"
 			android:layout_height="wrap_content" android:text="Brooklyn"
-			android:id="@+id/button6" android:onClick="ClickBrooklyn"/>
+			android:id="@+id/btBrooklyn" android:onClick="ClickBrooklyn"/>
 	</LinearLayout>
 </LinearLayout>
