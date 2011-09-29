@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+//import android.widget.Toast;
 import android.view.View.OnClickListener;
 import com.android.games.dopewars.R;
 
@@ -63,8 +64,6 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		btLoanShark = (Button)findViewById(R.id.btLoanShark);
 		btBank = (Button)findViewById(R.id.btBank);
 		
-		//calculatePrices(user);
-		
 		tvAcidDrugs.setOnTouchListener(this);
 		tvCocaineDrugs.setOnTouchListener(this);
 		tvEcstasyDrugs.setOnTouchListener(this);
@@ -89,9 +88,9 @@ public class DopeWars extends Activity implements View.OnTouchListener {
         if (resultCode == RESULT_OK) {
 			String zone = data.getExtras().getString("zone");
 			int zoneint = data.getExtras().getInt("zoneint");
-			tvZone.setText(zone);
+			tvZone.setText(zone);					// Set title to current Zone.
 			user.setLocation(zoneint);
-			if(zone.compareTo("Bronx") == 0){
+			if(zone.compareTo("Bronx") == 0){		//Disable LoanShark and Bank Buttons if not in Bronx
 				btLoanShark.setEnabled(true);
 				btBank.setEnabled(true);
 
@@ -99,74 +98,189 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 				btLoanShark.setEnabled(false);
 				btBank.setEnabled(false);
 			}
-			user.setTimeLeft(user.getDays() - 1 );
-			calculatePrices();
-			setText();
+			user.setTimeLeft(user.getDays() - 1 );	//Decrease days by 1
+			calculatePrices();					
+			recalculateSavings();
+			recalculateDebt();
+			setText();								//fill TextViews with prices and drug amounts.
         }
         
     }
+
+	private void recalculateDebt() {
+		long debt = user.getDebt();
+		if( user.getDays() < 30 )
+			user.setDebt(debt + (debt>>3));			// increase the debt by 1/8 
+	}
+
+	private void recalculateSavings() {
+		long savings = user.getSavings();
+		if( user.getDays() < 30 )
+			user.setSavings(savings + (savings>>4)); // increase the savings by 1/10
+	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// check which textview it is and do what you need to do
 		switch(v.getId()){
 		case R.id.tvAcidDrugs:
-			//set up dialog
-            final Dialog dialog = new Dialog(DopeWars.this);
-            dialog.setContentView(R.layout.buyselldialog);
-            dialog.setTitle("This is my custom dialog box");
-            dialog.setCancelable(true);
-            //there are a lot of settings, for dialog, check them all out!
-
-            //set up text
-            TextView text = (TextView) dialog.findViewById(R.id.TextView01);
-            text.setText("Cenas");
-
-            //set up image view
-           // ImageView img = (ImageView) dialog.findViewById(R.id.ImageView01);
-            //img.setImageResource(R.drawable.nista_logo);
-
-            //set up button
-            Button button = (Button) dialog.findViewById(R.id.Button01);
-            button.setOnClickListener(new OnClickListener() {
-            @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            //now that the dialog is set up, it's time to show it    
-            dialog.show();
+			if(user.getDrugs()[0] > 0)
+				showSellDialog(0);
 			break;
 			
 		case R.id.tvCocaineDrugs:
-			Toast.makeText(this, "Cocaine", Toast.LENGTH_SHORT).show();
+			if(user.getDrugs()[1] > 0)
+				showSellDialog(1);
 			break;
 			
 		case R.id.tvEcstasyDrugs:
-			Toast.makeText(this, "Ecstasy", Toast.LENGTH_SHORT).show();
+			if(user.getDrugs()[2] > 0)
+				showSellDialog(2);
 			break;
-			
+
 		case R.id.tvPCPDrugs:
-			Toast.makeText(this, "PCP", Toast.LENGTH_SHORT).show();
+			if(user.getDrugs()[3] > 0)
+				showSellDialog(3);
+			else
+				Toast.makeText(this, "No drugs to sell.", Toast.LENGTH_SHORT).show();
 			break;
-			
+
 		case R.id.tvHeroinDrugs:
-			Toast.makeText(this, "Heroin", Toast.LENGTH_SHORT).show();
+			if(user.getDrugs()[4] > 0)
+				showSellDialog(4);
+			else
+				Toast.makeText(this, "No drugs to sell.", Toast.LENGTH_SHORT).show();
 			break;
 
 		case R.id.tvWeedDrugs:
-			Toast.makeText(this, "Weed", Toast.LENGTH_SHORT).show();
+			if(user.getDrugs()[5] > 0)
+				showSellDialog(5);
+			else
+				Toast.makeText(this, "No drugs to sell.", Toast.LENGTH_SHORT).show();
 			break;
-			
+
 		case R.id.tvShroomsDrugs:
-			Toast.makeText(this, "Shrooms", Toast.LENGTH_SHORT).show();
+			if(user.getDrugs()[6] > 0)
+				showSellDialog(6);
+			else
+				Toast.makeText(this, "No drugs to sell.", Toast.LENGTH_SHORT).show();
+			break;
+
+		case R.id.tvSpeedDrugs:
+			if(user.getDrugs()[7] > 0)
+				showSellDialog(7);
+			else
+				Toast.makeText(this, "No drugs to sell.", Toast.LENGTH_SHORT).show();
 			break;
 			
-		case R.id.tvSpeedDrugs:
-			Toast.makeText(this, "Speed", Toast.LENGTH_SHORT).show();
+			
+		case R.id.tvAcidPrice:
+			if(user.getDrugPrices()[0] > 0)
+				showBuyDialog(0);
+			break;
+		
+		case R.id.tvCocainePrice:
+			if(user.getDrugPrices()[1] > 0)
+				showBuyDialog(1);
+			break;
+			
+		case R.id.tvEcstasyPrice:
+			if(user.getDrugPrices()[2] > 0)
+				showBuyDialog(2);
+			break;
+			
+		case R.id.tvPCPPrice:
+			if(user.getDrugPrices()[3] > 0)
+				showBuyDialog(3);
+			break;
+			
+		case R.id.tvHeroinPrice:
+			if(user.getDrugPrices()[4] > 0)
+				showBuyDialog(4);
+			break;
+			
+		case R.id.tvWeedPrice:
+			if(user.getDrugPrices()[5] > 0)
+				showBuyDialog(5);
+			break;
+			
+		case R.id.tvShroomsPrice:
+			if(user.getDrugPrices()[6] > 0)
+				showBuyDialog(6);
+			break;
+			
+		case R.id.tvSpeedPrice:
+			if(user.getDrugPrices()[7] > 0)
+				showBuyDialog(7);
 			break;
 		}
 		return false;
+	}
+
+	private void showSellDialog(int drug) {
+		//set up dialog
+        final Dialog dialog = new Dialog(DopeWars.this);
+        int count;
+        String message;
+        
+        dialog.setContentView(R.layout.buyselldialog);
+        dialog.setTitle("Sell " + getDrugName(drug));
+        dialog.setCancelable(true);
+        
+        //set up text
+        TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+        message = "You can sell up to " + user.getDrugs()[drug] + " at $" + user.getDrugPrices()[drug] + " each.";
+        count = (int)(user.getCash() / user.getDrugPrices()[drug]);
+        if( count < 1000 )
+        	message += count + ".";
+        else
+        	message += "a lot.";
+        text.setText(message);
+
+        //set up button
+        Button button = (Button) dialog.findViewById(R.id.btCancel);
+        button.setOnClickListener(new OnClickListener() {
+        @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        //now that the dialog is set up, it's time to show it    
+        dialog.show();
+		
+	}
+	
+	private void showBuyDialog(int drug) {
+		//set up dialog
+        final Dialog dialog = new Dialog(DopeWars.this);
+        int count;
+        String message;
+        
+        dialog.setContentView(R.layout.buyselldialog);
+        dialog.setTitle("Buy " + getDrugName(drug));
+        dialog.setCancelable(true);
+        
+        //set up text
+        TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+        message = "At $" + user.getDrugPrices()[drug] + " each, you can afford ";
+        count = (int)(user.getCash() / user.getDrugPrices()[drug]);
+        if( count < 1000 )
+        	message += count + ".";
+        else
+        	message += "a lot.";
+        text.setText(message);
+
+        //set up button
+        Button button = (Button) dialog.findViewById(R.id.btCancel);
+        button.setOnClickListener(new OnClickListener() {
+        @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        //now that the dialog is set up, it's time to show it    
+        dialog.show();
+		
 	}
 
 	public void Jet(View view) {
@@ -214,13 +328,33 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		drugPrices[6] = 600 + rand.nextInt(9999999) % 750;
 		drugPrices[7] = 70 + rand.nextInt(9999999) % 180;
 		
-		for (i = 0; i < 3; i++)
-		{
+		for (i = 0; i < 3; i++){ 		//randomly choose up to three drugs to be zero
 			j = rand.nextInt(8);
 			drugPrices [j] = 0;
 		}
-		
 		user.setDrugPrices(drugPrices);
+	}
+	
+	private String getDrugName(int drug){
+		switch(drug){
+		case 0:
+			return "Acid";
+		case 1:
+			return "Cocaine";
+		case 2:
+			return "Ecstasy";
+		case 3:
+			return "PCP";
+		case 4:
+			return "Heroin";
+		case 5:
+			return "Weed";
+		case 6:
+			return "Shrooms";
+		case 7:
+			return "Speed";
+		}
+		return null;
 	}
 	
 	
