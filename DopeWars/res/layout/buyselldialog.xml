@@ -7,29 +7,26 @@
 			   android:layout_width="wrap_content"
 			   android:layout_height="wrap_content"
 			   android:layout_centerHorizontal="true" />
-     
-     		<ScrollView android:id="@+id/ScrollView01"
-     					android:layout_width="wrap_content"
-     					android:layout_below="@+id/ImageView01"
-     					android:layout_height="200px">
-     
-     			<TextView android:text="@+id/TextView01"
-     					  android:id="@+id/TextView01"
-     					  android:layout_width="wrap_content"
-     					  android:layout_height="wrap_content" />
-     
-     		</ScrollView>
-     		<com.android.dopewars.NumberPicker  
+     <TextView android:text="@+id/TextView01"
+      		   android:id="@+id/TextView01"
+      		   android:layout_width="wrap_content"
+      		   android:layout_height="wrap_content" />
+	<com.android.dopewars.NumberPicker  
      					android:id="@+id/numberPicker1"
-     		     		android:layout_below="@id/ScrollView01"
+     		     		android:layout_below="@id/TextView01"
      					android:layout_width="wrap_content"
      					android:layout_height="wrap_content"
      					android:layout_centerHorizontal="true" 
      					/>
-     <Button android:id="@+id/btCancel"
+     	<Button android:id="@+id/btCancel"
      		 android:layout_below="@id/numberPicker1"
      		 android:layout_width="wrap_content"
      		 android:layout_height="wrap_content"
-     		 android:layout_centerHorizontal="true" 
-     		 android:text="Cancel"/>     
+     		 android:text="Cancel"/>   
+     	<Button android:id="@+id/btTransaction"
+     		 android:layout_below="@id/numberPicker1"
+     		 android:layout_width="wrap_content"
+     		 android:layout_height="wrap_content"
+     		 android:layout_alignRight="@id/TextView01"
+     		 android:text="Transaction"/>
 </RelativeLayout>

@@ -37,10 +37,16 @@ public class User {
 	/**
 	 * @param Drugs the Drugs to set
 	 */
+	public void setDrugs(int drug, int amount) {
+		this.Drugs[drug] = amount;
+	}
+	
+	/**
+	 * @param Drugs the Drugs to set
+	 */
 	public void setDrugs(int Drugs[]) {
 		this.Drugs = Drugs;
 	}
-
 
 	/**
 	 * @return the Cash
