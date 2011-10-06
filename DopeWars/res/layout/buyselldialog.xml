@@ -2,31 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
-     
-	<ImageView android:id="@+id/ImageView01"
-			   android:layout_width="wrap_content"
-			   android:layout_height="wrap_content"
-			   android:layout_centerHorizontal="true" />
+				
      <TextView android:text="@+id/TextView01"
       		   android:id="@+id/TextView01"
       		   android:layout_width="wrap_content"
-      		   android:layout_height="wrap_content" />
+      		   android:layout_height="wrap_content"
+      		   android:layout_marginLeft="5dip"/>
+      		   
 	<com.android.dopewars.NumberPicker  
      					android:id="@+id/numberPicker1"
      		     		android:layout_below="@id/TextView01"
      					android:layout_width="wrap_content"
      					android:layout_height="wrap_content"
-     					android:layout_centerHorizontal="true" 
-     					/>
-     	<Button android:id="@+id/btCancel"
-     		 android:layout_below="@id/numberPicker1"
-     		 android:layout_width="wrap_content"
-     		 android:layout_height="wrap_content"
-     		 android:text="Cancel"/>   
-     	<Button android:id="@+id/btTransaction"
-     		 android:layout_below="@id/numberPicker1"
-     		 android:layout_width="wrap_content"
-     		 android:layout_height="wrap_content"
-     		 android:layout_alignRight="@id/TextView01"
-     		 android:text="Transaction"/>
+     					android:layout_centerHorizontal="true"
+     					android:layout_marginTop="10dip"
+     					android:layout_marginBottom="5dip"/>
+     <LinearLayout android:orientation="horizontal"
+     			   android:layout_below="@id/numberPicker1"
+     			   android:layout_width="fill_parent"
+     			   android:layout_height="wrap_content">		
+     			<Button android:id="@+id/btCancel"	
+     					android:layout_width="fill_parent"
+     					android:layout_height="wrap_content"
+     					android:text="Cancel"
+     					android:layout_weight="1"/>   
+     		 
+     			<Button android:id="@+id/btTransaction"
+     		 			android:layout_width="fill_parent"
+     		 			android:layout_height="wrap_content"
+     		 			android:text="Transaction"
+     		 			android:layout_weight="1"/>
+     </LinearLayout>
 </RelativeLayout>

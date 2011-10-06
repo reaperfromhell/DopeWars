@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import com.android.games.dopewars.R;
 
 public class Jet extends Activity implements View.OnClickListener{
@@ -33,6 +34,17 @@ public class Jet extends Activity implements View.OnClickListener{
 		btBrooklyn.setOnClickListener(this);		
 
 	}
+
+	@Override
+	public void onBackPressed() {  							//fix backpress on start
+		Intent intent = getIntent();
+		int zoneint = intent.getExtras().getInt("zoneint");
+		if(zoneint == 0)									//check that zone has value. as 0 is nowhere, so... do nothing
+			return;
+		else
+			super.onBackPressed();
+	}
+
 
 	@Override
 	public void onClick(View v) {

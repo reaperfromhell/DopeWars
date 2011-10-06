@@ -70,9 +70,9 @@
         		<TextView android:textAppearance="?android:attr/textAppearanceSmall" android:layout_height="wrap_content" android:id="@+id/tvDebt" android:layout_width="105dp" android:text="-"></TextView>
         	</TableRow>
     	</TableLayout>
-		<Button android:inputType="textMultiLine"
-				android:text="Loan Shark" 
-				android:id="@+id/btLoanShark" 
+		<Button android:text="Loan Shark" 
+				android:id="@+id/btLoanShark"
+				android:onClick="Loanshark"
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"
 	 			android:layout_weight="1"
@@ -97,7 +97,8 @@
     			android:layout_weight="1"
     			android:layout_gravity="right"/>
 		<Button android:text="Bank" 
-				android:id="@+id/btBank" 
+				android:id="@+id/btBank"
+				android:onClick="Bank"
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"
 				android:layout_weight="1"

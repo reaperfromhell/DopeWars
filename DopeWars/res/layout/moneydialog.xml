@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				
+    <TextView android:text="@+id/TextView01"
+      		   android:id="@+id/TextView01"
+      		   android:layout_width="wrap_content"
+      		   android:layout_height="wrap_content"
+      		   android:layout_marginLeft="5dip"/>
+      		   
+    <SeekBar android:id="@+id/seekBar1"
+     		  android:layout_width="match_parent"
+     		  android:layout_height="wrap_content"
+     		  android:layout_centerVertical="true"
+     		  android:layout_alignParentLeft="true"
+     		  android:layout_below="@id/TextView01"
+     		  android:layout_marginLeft="10dip"
+     		  android:layout_marginRight="10dip"
+     		  android:layout_marginTop="15dip"
+     		  android:layout_marginBottom="15dip"/>
+     		  
+	<EditText android:id="@+id/etAmountMoney"
+			  android:layout_below="@id/seekBar1"
+			  android:layout_width="150dip"
+			  android:layout_height="wrap_content"
+			  android:inputType="number"
+			  android:layout_centerHorizontal="true"
+			  android:layout_marginBottom="15dip">
+			  <requestFocus></requestFocus>
+     </EditText>
+<LinearLayout android:orientation="horizontal"
+     			   android:layout_below="@id/etAmountMoney"
+     			   android:layout_height="wrap_content"
+     			   android:layout_width="match_parent">
+    <Button android:id="@+id/btCancelTrans"
+     		 android:layout_width="fill_parent"
+     		 android:layout_height="wrap_content"
+     		 android:text="Cancel"
+     		 android:layout_weight="1"/>
+     		    
+    <Button android:id="@+id/btMoneyTransaction"
+     		 android:layout_width="fill_parent"
+     		 android:layout_height="wrap_content"
+     		 android:layout_alignRight="@id/TextView01"
+     		 android:text="Transaction"
+     		 android:layout_weight="1"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -3,15 +3,23 @@ package com.android.dopewars;
 import java.util.Random;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View.OnClickListener;
+
 import com.android.games.dopewars.R;
 
 public class DopeWars extends Activity implements View.OnTouchListener {
@@ -19,7 +27,7 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 					 tvHeroinDrugs, tvWeedDrugs, tvShroomsDrugs, tvSpeedDrugs;
 	private TextView tvAcidPrice, tvCocainePrice, tvEcstasyPrice, tvPCPPrice,
 					 tvHeroinPrice, tvWeedPrice, tvShroomsPrice, tvSpeedPrice;
-	private TextView tvZone, tvCash, tvDebt, tvSavings, tvCoat, tvDays;
+	private TextView tvZone, tvCash, tvDebt, tvSavings, tvCoat, tvDays, tvGun;
 	private Button btLoanShark, btBank;
 	private User user;
 	
@@ -31,9 +39,6 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		user = new User();
 		
 		Jet(this.findViewById(R.id.btJet));
-		
-		//String zone = getIntent().getExtras().getString("zone");
-		//int zoneint = getIntent().getExtras().getInt("zoneint");
 		
 		tvAcidDrugs = (TextView)findViewById(R.id.tvAcidDrugs);
 		tvCocaineDrugs = (TextView)findViewById(R.id.tvCocaineDrugs);
@@ -59,6 +64,7 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		tvSavings = (TextView)findViewById(R.id.tvSavings);
 		tvCoat = (TextView)findViewById(R.id.tvCoat);
 		tvDays = (TextView)findViewById(R.id.tvDays);
+		tvGun = (TextView)findViewById(R.id.tvGun);
 		
 		btLoanShark = (Button)findViewById(R.id.btLoanShark);
 		btBank = (Button)findViewById(R.id.btBank);
@@ -103,14 +109,167 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 					btLoanShark.setEnabled(false);
 					btBank.setEnabled(false);
 				}
-				user.setTimeLeft(user.getDays() - 1); // Decrease days by 1
-				calculatePrices();
-				recalculateSavings();
-				recalculateDebt();
-				setText(); // fill TextViews with prices and drug amounts.
+				recalculateStuff();
+				doRandom();
 			}
 		}
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+
+	private void doRandom() {
+		Random rand = new Random();
+		if( Math.abs(rand.nextInt() % 10) == 1){
+			RandomCoat();
+		}
+		
+		if( Math.abs(rand.nextInt() % 10) == 1){
+			RandomGun();
+		}
+		
+		if( Math.abs(rand.nextInt() % 10) == 1 ){
+			Randomness();   //cops, busts, cheap drugs, free drugs
+		}
+		return;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.newGame:
+				new AlertDialog.Builder( this )
+		        .setTitle( "New Game" )
+		        .setMessage("Are you sure you want to start a new game?\nAll progress will be lost.")
+		        .setPositiveButton( "Yes", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		                Intent intent = getIntent();
+		                overridePendingTransition(0, 0);
+		                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+		                finish();
+		                overridePendingTransition(0, 0);
+		                startActivity(intent);
+		            }
+
+		        })
+		        .setNegativeButton( "No", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            }
+		        })
+		        .show();
+	            break;
+	    }
+	    return true;
+	}
+	
+	private void RandomCoat(){
+		new AlertDialog.Builder( this )
+        .setTitle( "Buy a Bigger Coat" )
+        .setMessage("Would you like to buy a bigger coat for $200?")
+        .setPositiveButton( "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        })
+        .setNegativeButton( "Buy", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            	if((user.getCash() - 200) < 0)
+            		Toast.makeText(DopeWars.this, "Not enough funds.", Toast.LENGTH_SHORT).show();
+            	else{
+            	user.setCash(user.getCash() - 200);
+            	user.setCoat(user.getCoat() + 40);
+            	setText();
+            	}
+            }
+        })
+        .show();
+	}
+
+	private void RandomGun() {
+		if( user.getGuns() == 0 ){
+		new AlertDialog.Builder( this )
+        .setTitle( "Buy a Gun" )
+        .setMessage("Would you like to buy a gun for $400?")
+        .setPositiveButton( "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        })
+        .setNegativeButton( "Buy", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            	if((user.getCash() - 400) < 0)
+            		Toast.makeText(DopeWars.this, "Not enough funds.", Toast.LENGTH_SHORT).show();
+            	else{
+            	user.setCash(user.getCash() - 400);
+            	user.setGuns(1);
+            	setText();
+            	}
+            }
+        })
+        .show();
+		}
+		if( user.getGuns() == 1 ){
+			new AlertDialog.Builder( this )
+	        .setTitle( "Buy a Shotgun" )
+	        .setMessage("Would you like to buy a shotgun for $800?")
+	        .setPositiveButton( "Cancel", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            }
+	        })
+	        .setNegativeButton( "Buy", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            	if((user.getCash() - 800) < 0)
+	            		Toast.makeText(DopeWars.this, "Not enough funds.", Toast.LENGTH_SHORT).show();
+	            	else{
+	            	user.setCash(user.getCash() - 800);
+	            	user.setGuns(2);
+	            	setText();
+	            	}
+	            }
+	        })
+	        .show();
+		}
+		return;
+	}
+	
+	private void Randomness(){					//cops, busts, cheap drugs, free drugs
+		
+		return;
+	}
+
+	private void recalculateStuff() {
+		if(user.getDays() > 0){
+			user.setTimeLeft(user.getDays() - 1); // Decrease days by 1
+			calculatePrices();
+			recalculateSavings();
+			recalculateDebt();
+			setText(); // fill TextViews with prices and drug amounts.
+		}else{
+			new AlertDialog.Builder( this )
+	        .setTitle( "Game Over" )
+	        .setMessage("The game has ended.\nYou managed to make $" + (user.getCash() + user.getSavings() - user.getDebt()) + ".\n\nStart a new game?")
+	        .setPositiveButton( "Yes", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	                Intent intent = getIntent();
+	                overridePendingTransition(0, 0);
+	                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+	                finish();
+
+	                overridePendingTransition(0, 0);
+	                startActivity(intent);
+	            }
+
+	        })
+	        .setNegativeButton( "No", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	                finish();
+	            }
+	        })
+	        .show();
+		}
 	}
 
 	private void recalculateDebt() {
@@ -257,7 +416,7 @@ public class DopeWars extends Activity implements View.OnTouchListener {
         
         //set up text
         TextView text = (TextView) dialog.findViewById(R.id.TextView01);
-        message = "You can sell up to " + user.getDrugs()[drug] + " at $" + user.getDrugPrices()[drug] + " each.";
+        message = "You can sell up to " + user.getDrugs()[drug] + " at $" + user.getDrugPrices()[drug] + " each.\n";
         text.setText(message);
         
         //set numberpicker
@@ -307,7 +466,7 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 	private void showBuyDialog(final int drug) {
 		//set up dialog
         final Dialog dialog = new Dialog(DopeWars.this);
-        int count;
+        int count, available;
         String message;
         
         dialog.setContentView(R.layout.buyselldialog);
@@ -322,12 +481,15 @@ public class DopeWars extends Activity implements View.OnTouchListener {
         	message += count + ".";
         else
         	message += "a lot.";
+        available = user.getCoat() - user.getDrugsSum();
+        if(count > available)
+        	message += "\nBut you only have room for " + available + " more.";
         text.setText(message);
         
         //set numberpicker
         final NumberPicker numbpick = (NumberPicker) dialog.findViewById(R.id.numberPicker1);
-        numbpick.setCurrent(count);
-        numbpick.setmEnd(count);
+        numbpick.setCurrent(Math.min(count, available));
+        numbpick.setmEnd(Math.min(count, available));
 
         //set up cancel button
         Button btCancelDialog = (Button) dialog.findViewById(R.id.btCancel);
@@ -357,9 +519,341 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 	}
 
 	public void Jet(View view) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("zoneint", user.getLocation());
 		Intent myIntent = new Intent(view.getContext(), Jet.class);
+		myIntent.putExtras(bundle);
 		startActivityForResult(myIntent, 0);
 	}
+	
+	public void Loanshark(View view){
+		new AlertDialog.Builder( this )
+        .setTitle( "Loan Shark" )
+        .setPositiveButton( "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            	
+            }
+        })
+        .setNegativeButton( "Repay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                LoansharkRepay();
+            }
+        })
+        .setNeutralButton( "Borrow", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                LoansharkBorrow();
+            }
+        })
+        .show();		
+	}
+	
+	public void Bank(View view){
+		new AlertDialog.Builder( this )
+        .setTitle( "Bank" )
+        .setPositiveButton( "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        })
+        .setNegativeButton( "Deposit", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                BankDeposit();
+            }
+        })
+        .setNeutralButton( "Withdraw", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                BankWithdraw();
+            }
+        })
+        .show();
+	}
+	
+	public void BankWithdraw(){
+		final Dialog dialog = new Dialog(DopeWars.this);
+        String message;
+        
+        dialog.setContentView(R.layout.moneydialog);
+        dialog.setTitle("Withdaw");
+        dialog.setCancelable(true);
+        
+        //set up text
+        TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+        message = "Select the amount of cash you wish to withdraw from your savings account.";
+        text.setText(message);
+        
+        //set up edittext
+        final EditText edittext = (EditText) dialog.findViewById(R.id.etAmountMoney);
+        
+        //set up seekbar
+        SeekBar seekbar = (SeekBar) dialog.findViewById(R.id.seekBar1);
+        seekbar.setMax((int)user.getSavings());
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        	 @Override
+        	 public void onStopTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onStartTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+        		 edittext.setText("" + arg1);
+        		 edittext.setSelection(edittext.getText().length());
+        	 }
+        	});
+        
+        //set up cancel button
+        Button btCancelDialog = (Button) dialog.findViewById(R.id.btCancelTrans);
+        btCancelDialog.setOnClickListener(new OnClickListener() {
+        @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        
+        //set up deposit button
+        Button btWithdraw = (Button) dialog.findViewById(R.id.btMoneyTransaction);
+        btWithdraw.setText("Withdraw");
+        btWithdraw.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				long amount = Long.parseLong(edittext.getText().toString());
+				if((user.getSavings() - amount) < 0)
+					Toast.makeText(DopeWars.this, "Not enough funds.", Toast.LENGTH_SHORT).show();
+				else{
+				user.setCash(user.getCash() + amount);
+				user.setSavings(user.getSavings() - amount);
+				dialog.dismiss();
+				setText();
+				}
+			}
+		});
+        
+        dialog.show();  //now that the dialog is set up, it's time to show it
+
+		
+	}
+	
+	public void BankDeposit(){
+		final Dialog dialog = new Dialog(DopeWars.this);
+        String message;
+        
+        dialog.setContentView(R.layout.moneydialog);
+        dialog.setTitle("Deposit");
+        dialog.setCancelable(true);
+        
+        //set up text
+        TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+        message = "Select the amount of cash you wish to deposit into your savings account.";
+        text.setText(message);
+        
+        //set up edittext
+        final EditText edittext = (EditText) dialog.findViewById(R.id.etAmountMoney);
+        
+        //set up seekbar
+        SeekBar seekbar = (SeekBar) dialog.findViewById(R.id.seekBar1);
+        seekbar.setMax((int)user.getCash());
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        	 @Override
+        	 public void onStopTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onStartTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+        		 edittext.setText("" + arg1);
+        		 edittext.setSelection(edittext.getText().length());
+        	 }
+        	});
+        
+        //set up cancel button
+        Button btCancelDialog = (Button) dialog.findViewById(R.id.btCancelTrans);
+        btCancelDialog.setOnClickListener(new OnClickListener() {
+        @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        
+        //set up deposit button
+        Button btDeposit = (Button) dialog.findViewById(R.id.btMoneyTransaction);
+        btDeposit.setText("Deposit");
+        btDeposit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				long amount = Long.parseLong(edittext.getText().toString());
+				if((user.getCash() - amount) < 0)
+					Toast.makeText(DopeWars.this, "Not enough funds.", Toast.LENGTH_SHORT).show();
+				else{
+				user.setCash(user.getCash() - amount);
+				user.setSavings(user.getSavings() + amount);
+				dialog.dismiss();
+				setText();
+				}
+			}
+		});
+        
+        dialog.show();  //now that the dialog is set up, it's time to show it
+
+		
+	}
+	
+	public void LoansharkBorrow(){
+		final Dialog dialog = new Dialog(DopeWars.this);
+        String message;
+        
+        dialog.setContentView(R.layout.moneydialog);
+        dialog.setTitle("Borrow");
+        dialog.setCancelable(true);
+        
+        //set up text
+        TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+        message = "Select the amount of cash you wish to borrow from the loan shark.";
+        text.setText(message);
+        
+        //set up edittext
+        final EditText edittext = (EditText) dialog.findViewById(R.id.etAmountMoney);
+        
+        
+        //set up seekbar
+        SeekBar seekbar = (SeekBar) dialog.findViewById(R.id.seekBar1);
+        seekbar.setMax(10000);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        	 @Override
+        	 public void onStopTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onStartTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+        		 edittext.setText("" + arg1);
+        		 edittext.setSelection(edittext.getText().length());
+        	 }
+        	});
+        
+        //set up cancel button
+        Button btCancelDialog = (Button) dialog.findViewById(R.id.btCancelTrans);
+        btCancelDialog.setOnClickListener(new OnClickListener() {
+        @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        
+        //set up borrow button
+        Button btBorrow = (Button) dialog.findViewById(R.id.btMoneyTransaction);
+        btBorrow.setText("Borrow");
+        btBorrow.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				long amount = Long.parseLong(edittext.getText().toString());
+				user.setCash(user.getCash() + amount);
+				user.setDebt(user.getDebt() + amount);
+				dialog.dismiss();
+				setText();
+			}
+		});
+        
+        dialog.show();  //now that the dialog is set up, it's time to show it
+
+		
+	}
+	
+	public void LoansharkRepay(){
+		final Dialog dialog = new Dialog(DopeWars.this);
+        String message;
+        
+        dialog.setContentView(R.layout.moneydialog);
+        dialog.setTitle("Repay");
+        dialog.setCancelable(true);
+        
+        //set up text
+        TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+        message = "Select the amount of your debt that you wish to repay to the loan shark.";
+        text.setText(message);
+        
+        //set up edittext
+        final EditText edittext = (EditText) dialog.findViewById(R.id.etAmountMoney);
+        
+        //set up seekbar
+        SeekBar seekbar = (SeekBar) dialog.findViewById(R.id.seekBar1);
+        seekbar.setMax((int)Math.min(user.getDebt(), user.getCash()));
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        	 @Override
+        	 public void onStopTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onStartTrackingTouch(SeekBar arg0) {
+
+        	 }
+
+        	 @Override
+        	 public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+        		 edittext.setText("" + arg1);
+        		 edittext.setSelection(edittext.getText().length());
+        	 }
+        	});
+        
+        //set up cancel button
+        Button btCancelDialog = (Button) dialog.findViewById(R.id.btCancelTrans);
+        btCancelDialog.setOnClickListener(new OnClickListener() {
+        @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        
+        //set up borrow button
+        Button btRepay = (Button) dialog.findViewById(R.id.btMoneyTransaction);
+        btRepay.setText("Repay");
+        btRepay.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				long amount = Long.parseLong(edittext.getText().toString());
+				if((user.getCash() - amount) < 0)
+					Toast.makeText(DopeWars.this, "Not enough funds.", Toast.LENGTH_SHORT).show();
+				else{
+					if(user.getDebt() - amount < 0)
+						Toast.makeText(DopeWars.this, "Your debt is really not that big.", Toast.LENGTH_SHORT).show();
+					else{
+					user.setCash(user.getCash() - amount);
+					user.setDebt(user.getDebt() - amount);
+					dialog.dismiss();
+					setText();
+					}
+				}
+			}
+		});
+        
+        dialog.show();  //now that the dialog is set up, it's time to show it
+
+		
+	}
+	
+	
+	
 	
 	public void setText(){
 		tvAcidDrugs.setText("" + user.getDrugs()[0]);
@@ -412,6 +906,11 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		else
 			tvSpeedPrice.setText("-");
 		
+		if(user.getGuns() == 1)
+			tvGun.setText("Gun");
+		if(user.getGuns() == 2)
+			tvGun.setText("Shotgun");
+		
 		tvCash.setText("$" + user.getCash());
 		tvDebt.setText("$" +  user.getDebt());
 		tvSavings.setText("$" + user.getSavings());
@@ -462,6 +961,8 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		return null;
 		}
 	}
+	
+	
 	
 	
 }
