@@ -6,7 +6,7 @@ public class User {
 	private int Drugs[];
 	private long Cash, Debt, Savings;
 	private long DrugPrices[];
-	private int Coat, Guns, DrugsSum;
+	private int Coat, Guns;
 	private int Days, copCount, Location;
 	//String LocationName;
 	
@@ -20,7 +20,6 @@ public class User {
 		this.Savings = 0;
 		this.Coat = 100;
 		this.Guns = 0;
-		this.DrugsSum = 0;
 		this.Days = 31;
 		this.copCount = 3;
 		this.Location = 0;
@@ -148,17 +147,12 @@ public class User {
 	 * @return the DrugsSum
 	 */
 	public int getDrugsSum() {
+		int DrugsSum = 0;
+		for( int i = 0; i < 8; i++){
+			DrugsSum += Drugs[i];
+		}
 		return DrugsSum;
 	}
-
-
-	/**
-	 * @param DrugsSum the DrugsSum to set
-	 */
-	public void setDrugsSum(int DrugsSum) {
-		this.DrugsSum = DrugsSum;
-	}
-
 
 	/**
 	 * @return the timeLeft

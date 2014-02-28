@@ -1,7 +1,7 @@
 package com.android.dopewars;
 
 import java.util.Random;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,9 +19,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.games.dopewars.R;
 
+@SuppressLint("CutPasteId")
 public class DopeWars extends Activity implements View.OnTouchListener {
 	private TextView tvAcidDrugs, tvCocaineDrugs, tvEcstasyDrugs, tvPCPDrugs,
 					 tvHeroinDrugs, tvWeedDrugs, tvShroomsDrugs, tvSpeedDrugs;
@@ -30,6 +30,26 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 	private TextView tvZone, tvCash, tvDebt, tvSavings, tvCoat, tvDays, tvGun;
 	private Button btLoanShark, btBank;
 	private User user;
+	
+	private class RandMessages{
+		public int freq;
+		public String msg;
+		public int drug;
+		public int plus;
+		public int minus;
+		public int add;
+		public RandMessages(int freq, String msg, int drug, int plus, int minus, int add) {
+			super();
+			this.freq = freq;
+			this.msg = msg;
+			this.drug = drug;
+			this.plus = plus;
+			this.minus = minus;
+			this.add = add;
+		}
+	}
+	
+	private RandMessages gameMessages[] = new RandMessages[17];
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +107,24 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		tvShroomsPrice.setOnTouchListener(this);
 		tvSpeedPrice.setOnTouchListener(this);
 		
+		gameMessages[0] = new RandMessages(13, "The cops just did a big Weed bust!\nPrices are sky-high!", 5, 4, 0, 0);
+		gameMessages[1] = new RandMessages(20, "The cops just did a big PCP bust!\nPrices are sky-high!", 3, 4, 0, 0);
+		gameMessages[2] = new RandMessages(25, "The cops just did a big Heroin bust!\nPrices are sky-high!", 4, 4, 0, 0);
+		gameMessages[3] = new RandMessages(13, "The cops just did a big Ecstasy bust!\nPrices are sky-high!", 2, 4, 0, 0);
+		gameMessages[4] = new RandMessages(35, "The cops just did a big Cocaine bust!\nPrices are sky-high!", 1, 4, 0, 0);
+		gameMessages[5] = new RandMessages(15, "The cops just did a big Speed bust!\nPrices are sky-high!", 7, 4, 0, 0);
+		gameMessages[6] = new RandMessages(25, "Addicts are buying Heroin at outrageous prices!", 4, 8, 0, 0);
+		gameMessages[7] = new RandMessages(20, "Addicts are buying Speed at outrageous prices!", 7, 8, 0, 0);
+		gameMessages[8] = new RandMessages(20, "Addicts are buying PCP at outrageous prices!", 3, 8, 0, 0);
+		gameMessages[9] = new RandMessages(17, "Addicts are buying Shrooms at outrageous prices!", 6, 8, 0, 0);
+		gameMessages[10] = new RandMessages(35, "Addicts are buying Cocaine at outrageous prices!", 1, 8, 0, 0);
+		gameMessages[11] = new RandMessages(17, "The market has been flooded with cheap home-made Acid!", 0, 0, 8, 0);
+		gameMessages[12] = new RandMessages(10, "A Columbian freighter dusted the Coast Guard! Weed prices have bottomed out!", 5, 0, 4, 0);
+		gameMessages[13] = new RandMessages(11, "A gang raided a local pharmacy and is selling cheap Ecstasy!", 2, 0, 8, 0);
+		gameMessages[14] = new RandMessages(55, "You found some Cocaine on a dead dude in the subway!", 1, 0, 0, 3);
+		gameMessages[15] = new RandMessages(45, "You found some Acid on a dead dude in the subway!", 0, 0, 0, 6);
+		gameMessages[16] = new RandMessages(35, "You found some PCP on a dead dude in the subway!", 3, 0, 0, 4);
+		
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -110,7 +148,6 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 					btBank.setEnabled(false);
 				}
 				recalculateStuff();
-				doRandom();
 			}
 		}
 
@@ -124,21 +161,168 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 	}
 
 	private void doRandom() {
+		int i;
+		int addcount;
 		Random rand = new Random();
+		
+		for (i = 0; i < 17; i++){
+			if (( Math.abs(rand.nextInt()) % gameMessages[i].freq) == 0){
+				if ( user.getDrugPrices()[gameMessages [i].drug] == 0)
+					continue;
+				new AlertDialog.Builder( this )
+		        .setTitle( "News Flash" )
+		        .setMessage(gameMessages[i].msg)
+		        .setPositiveButton( "OK", new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {}
+		        }).show();
+				if (gameMessages[i].plus > 0)
+					user.getDrugPrices()[gameMessages [i].drug] *= gameMessages[i].plus;
+				if (gameMessages[i].minus > 0)
+					user.getDrugPrices()[gameMessages [i].drug] /= gameMessages[i].minus;
+				if (gameMessages[i].add + user.getDrugsSum() > user.getCoat())
+					addcount = user.getCoat() - user.getDrugsSum();
+				else
+					addcount = gameMessages [i].add;
+				user.setDrugs(gameMessages[i].drug, user.getDrugs()[gameMessages[i].drug] + addcount);
+				break;
+			}
+		}
+		
+		if ( (Math.abs(rand.nextInt()) % 7) == 0 && (user.getDrugsSum() != 0)){
+			FuzzEncounter();
+			return;
+		}
+		
 		if( Math.abs(rand.nextInt() % 10) == 1){
 			RandomCoat();
+			return;
 		}
 		
 		if( Math.abs(rand.nextInt() % 10) == 1){
 			RandomGun();
 		}
-		
-		if( Math.abs(rand.nextInt() % 10) == 1 ){
-			Randomness();   //cops, busts, cheap drugs, free drugs
-		}
 		return;
 	}
 	
+	@SuppressWarnings("unused")
+	private void FuzzEncounter() {
+		// TODO Auto-generated method stub
+		int i;
+		int result = 3;
+		int copCount = user.getCopCount();
+		final int resolved = 0;
+		String msg = "";
+
+		if (copCount < 1)
+			return;
+
+		msg += "Officer Hardass ";
+		//while (resolved == 0){
+			
+			switch (copCount){
+			
+			case 1:
+				msg += "is chasing you!";
+				break;
+			case 2:
+				msg += "and one of his deputies are chasing you!";
+				break;
+			case 3:
+				msg += "and two of his deputies are chasing you!";
+				break;
+			}
+			msg += "\n\nWhat do you do?";
+			new AlertDialog.Builder( this )
+	        .setTitle( "Police" )
+	        .setMessage(msg)
+	        .setPositiveButton( "Run", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            	//resolved = 1;
+	            }
+	        })
+	        .setNegativeButton( "Fight", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            	Toast.makeText(DopeWars.this, "You do not have a gun.", Toast.LENGTH_SHORT).show();
+	            	//resolved = 2;
+	            }
+	        })
+	        .show();
+		//}
+			/* result = FrmCustomAlert (CopForm, s, isare, "");
+			if (result == 0)
+			{
+				if (!(SysRandom (0) % 3))
+				{
+					if (!(SysRandom (0) % 5))
+					{
+						resolved = 2;
+						FrmAlert (kidCopsCaught);
+						continue;
+					}
+					resolved = 0;
+					CopForm = kidCopsRemain;
+					continue;
+				}
+				else
+				{
+					resolved = 1;
+					FrmAlert (kidCopsRan);
+					continue;
+				}
+			}				
+			else if (result == 1)
+			{
+				if (myGuns == 0)
+				{
+					FrmAlert (kidNoGun);
+					continue;
+				}
+				if (!(SysRandom (0) % 4))
+				{
+					FrmAlert (kidCopsHit);
+					copCount--;
+					if (copCount < 1)
+					{
+						resolved = 1;
+						continue;
+					}
+					CopForm = kidCopsRemain;				
+				}
+				else
+				{
+					FrmAlert (kidCopsMiss);
+					CopForm = kidCopsRemain;
+				}
+				if (!(SysRandom (0) % 5))
+				{
+					if (!(SysRandom (0) % 5))
+					{
+						FrmAlert (kidCopsKill);
+						timeLeft = 0;
+						copCount = -1;
+						resolved = 1;
+						continue;
+					}
+					FrmAlert (kidCopsWounded);
+					resolved = 2;
+					continue;
+				}
+				else
+				{
+					FrmAlert (kidCopsMissYou);
+				}
+			}				
+		}
+		if (resolved == 2)
+		{
+			FrmAlert (kidCopsSeize);
+			for (i = 0; i < 8; i++)
+				myDrugs [i] = 0;
+			myCash /= 2;
+			ProcessForm (kidBuySell);
+		}*/
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -235,6 +419,7 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		return;
 	}
 	
+	@SuppressWarnings("unused")
 	private void Randomness(){					//cops, busts, cheap drugs, free drugs
 		
 		return;
@@ -246,26 +431,33 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 			calculatePrices();
 			recalculateSavings();
 			recalculateDebt();
+			doRandom();
 			setText(); // fill TextViews with prices and drug amounts.
 		}else{
+			long sum = user.getCash() + user.getSavings() - user.getDebt();
+			String message;
+			if(sum > 0)
+				message = "The game has ended.\nYou managed to make $" + sum + ".\n\nStart a new game?"; 
+			else
+				message = "The game has ended.\nYou managed to make $" + sum + ".\nAs a reward the loan shark got you a shiny new pair of broken legs.\n\nStart a new game?";
 			new AlertDialog.Builder( this )
 	        .setTitle( "Game Over" )
-	        .setMessage("The game has ended.\nYou managed to make $" + (user.getCash() + user.getSavings() - user.getDebt()) + ".\n\nStart a new game?")
-	        .setPositiveButton( "Yes", new DialogInterface.OnClickListener() {
+	        .setMessage(message)
+	        .setPositiveButton( "No", new DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int which) {
-	                Intent intent = getIntent();
+	            	finish();
+	            }
+
+	        })
+	        .setNegativeButton( "Yes", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            	Intent intent = getIntent();
 	                overridePendingTransition(0, 0);
 	                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 	                finish();
 
 	                overridePendingTransition(0, 0);
 	                startActivity(intent);
-	            }
-
-	        })
-	        .setNegativeButton( "No", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int which) {
-	                finish();
 	            }
 	        })
 	        .show();
@@ -451,7 +643,6 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 			@Override
 			public void onClick(View v) {
 				user.setDrugs(drug,user.getDrugs()[drug] - numbpick.getCurrent());
-				user.setDrugsSum(user.getDrugsSum() - numbpick.getCurrent());
 				user.setCash(user.getCash() + (numbpick.getCurrent() * user.getDrugPrices()[drug]));
 				dialog.dismiss();
 				setText();
@@ -508,7 +699,6 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 			@Override
 			public void onClick(View v) {
 				user.setDrugs(drug,user.getDrugs()[drug] + numbpick.getCurrent());
-				user.setDrugsSum(user.getDrugsSum() + numbpick.getCurrent());
 				user.setCash(user.getCash() - (numbpick.getCurrent() * user.getDrugPrices()[drug]));
 				dialog.dismiss();
 				setText();
