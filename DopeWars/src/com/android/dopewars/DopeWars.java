@@ -419,7 +419,6 @@ public class DopeWars extends Activity implements View.OnTouchListener {
 		return;
 	}
 	
-	@SuppressWarnings("unused")
 	private void Randomness(){					//cops, busts, cheap drugs, free drugs
 		
 		return;
